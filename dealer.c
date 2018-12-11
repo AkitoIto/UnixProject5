@@ -19,9 +19,8 @@ int main(int argc, char *argv[]){
 	   		//printf("Percentage: %f\n", atof(argv[2]));
 			break;
 	   	case 'v':
-	   		//printf("verbose option\n");
-			isVerbose = 1;
-			break;
+			  isVerbose = 1;
+		  	break;
 		  case '?':
 	   		if(optopt == 'p')
 				 fprintf(stderr, "Percentage required\n");
@@ -36,12 +35,10 @@ int main(int argc, char *argv[]){
 	if(isVerbose == 1)
 	{
 		num_trials = atoi(argv[4]);
-		//printf("Number of trials: %d\n", num_trials);
 	}	
 	else
 	{
 		num_trials = atoi(argv[3]);
-		//printf("Number of trials: %d\n", num_trials);
 	}
  
 	int i;
@@ -61,7 +58,6 @@ int main(int argc, char *argv[]){
 	
 		if(pid > 0)
 		{
-			//printf("I created a child process\n");
       //pid represents child PID
 			waitpid(pid, &status, 0);
       if(status == 0)
@@ -76,11 +72,9 @@ int main(int argc, char *argv[]){
 		}
 		else if(pid == 0)
 		{
-			//printf("I am a new born process\n");
-			//printf("Child process: %d\n", getpid());
-			//printf("My parent process: %d\n", getppid());
+			
       nanosleep(1);
-			execv("./demo", argv);
+			execv("./hand", argv);
       exit(1);
 		}
 		else 
@@ -95,12 +89,36 @@ int main(int argc, char *argv[]){
    //non verbose option
    else
    {
+   //creating child procss
+	 for(i = 0; i < num_trials; i++)
+	 {
+		pid = fork();
+	
+		if(pid > 0)
+		{
+      //pid represents child PID
+			waitpid(pid, &status, 0);
+      if(status != 0)
+           sucCounter++;
+		}
+		else if(pid == 0)
+		{
+      nanosleep(1);
+			execv("./hand", argv);
+      exit(1);
+		}
+		else 
+		{
+			//error
+			printf("Error");
+		}	
 
    }
+}
    
    //final result
    printf("\nCreated %d process.\n", num_trials);
-   printf("number of success: %d\n", sucCounter);
+   //printf("number of success: %d\n", sucCounter);
    double success = ((float)sucCounter / num_trials) * 100;
    printf("Success - %.2f %\n", success);
    printf("Failure - %.2f %\n", 100 - success);
